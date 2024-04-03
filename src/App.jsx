@@ -1,37 +1,50 @@
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import AdminPage from "./pages/AdminPage";
 import LoginPage from "./pages/LoginPage";
-import PrivateRoute from "./components/PrivateRoute";
 import { useEffect, useState } from "react";
-
+import { RoleContextProvider } from "./context/RoleProvider";
 
 function App() {
-    const [isAuth, setIsAuth] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
 
-    useEffect(() => {
-      const userInfo = localStorage.getItem("userInfo");
-      console.log("userInfo::: ", userInfo);
-      if (userInfo) {
-        setIsAuth(true);
-      }
-    }, []);
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+    if (userInfo) {
+      setIsAuth(true);
+    }
+
+  }, []);
+
   const router = createBrowserRouter([
     {
-      path:'/',
-      element: <LoginPage setIsAuth/>
+      path: "/",
+      element: (
+        <RoleContextProvider>
+          <LoginPage setIsAuth={ setIsAuth} />
+        </RoleContextProvider>
+      ),
     },
     {
-      path: "administrador/*",
-      element: (isAuth ? <AdminPage /> : <Navigate to ="/" />),
+      path: "administrador",
+      element: JSON.parse(localStorage.getItem("isAuth")) ? (
+        <RoleContextProvider>
+          <AdminPage />
+        </RoleContextProvider>
+      ) : (
+        <Navigate to="/" />
+      ),
     },
     {
-      path:'operador'
+      path: "operador",
     },
     {
-      path:'guia'
-    }
+      path: "guia",
+    },
   ]);
-
   return <RouterProvider router={router} />;
 }
 
