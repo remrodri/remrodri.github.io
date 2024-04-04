@@ -157,11 +157,13 @@ const styles = stylex.create({
 
 function LoginPage(props) {
   const navigate = useNavigate();
+  // eslint-disable-next-line react/prop-types
   const { setIsAuth } = props;
   const { roles, loadRoles } = useRoles();
 
   useEffect(() => {
     loadRoles();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function saveRoleInfo() {

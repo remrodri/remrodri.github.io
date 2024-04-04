@@ -2,6 +2,7 @@ import { useContext, useState } from "react"
 import { RoleContext } from "./RoleContext"
 import { getRoles } from "../services/roleService";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useRoles = () => {
   const context = useContext(RoleContext);
   if (!context) {
@@ -14,6 +15,7 @@ export const useRoles = () => {
 export const RoleContextProvider = ({ children }) => { 
   const [roles, setRoles] = useState([]);
   
+  //cargar roles
   async function loadRoles() {
     const response = await getRoles();
     //console.log('response::: ', response);

@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { RoleContextProvider } from "./context/RoleProvider";
 
 function App() {
+  // eslint-disable-next-line no-unused-vars
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
