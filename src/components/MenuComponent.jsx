@@ -1,5 +1,4 @@
 import * as stylex from "@stylexjs/stylex";
-import { useRoles } from "../context/RoleProvider";
 import { useEffect } from "react";
 import {
   myBlackColors,
@@ -7,7 +6,8 @@ import {
   mywhiteColors,
 } from "../assets/styles/styles.stylex";
 import { useNavigate } from "react-router-dom";
-
+import PersonalComponent from "./Personal/PersonalComponent";
+import LogComponent from "./LogComponent";
 
 const styles = stylex.create({
   base: () => ({
@@ -16,8 +16,8 @@ const styles = stylex.create({
     background: {
       default: "rgba(27, 29, 36, 0.38)",
     },
-    borderTopLeftRadius: "16px",
-    borderBottomLeftRadius: "16px",
+    borderTopLeftRadius: "1.6rem",
+    borderBottomLeftRadius: "1.6rem",
     boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
     backdropFilter: "blur(13px)",
     border: "1px solid rgba(0, 0, 0, 0.3)",
@@ -49,7 +49,7 @@ const styles = stylex.create({
       default: "rgba(27, 29, 36, 0.55)",
       ":hover": myBlackColors.blackColor1,
     },
-    border: "2px solid rgba(0, 0, 0, 0.3)",
+    border: "1px solid rgba(0, 0, 0, 0.3)",
     //borderRadius:'0.9rem'
     borderTopLeftRadius: "0.9rem",
     borderBottomLeftRadius: "0.9rem",
@@ -59,14 +59,26 @@ const styles = stylex.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    padding: "1rem",
   }),
   logoutButtonStyle: () => ({
-    height: "4rem",
-    width: "6rem",
+    height: "100%",
+    width: "100%",
+    fontSize: myFontSizes.myFontSize6,
+    color: mywhiteColors.aliceBlue,
+    textAlign: "center",
+    background: {
+      default: "rgba(27, 29, 36, 0.55)",
+      ":hover": myBlackColors.blackColor1,
+    },
+    border: "1px solid rgba(0, 0, 0, 0.3)",
+    borderBottomLeftRadius: "0.6rem",
   }),
 });
 function MenuComponent(props) {
   const navigate = useNavigate();
+  // eslint-disable-next-line react/prop-types
+  const { showComponent } = props;
   //const { roles, loadRoles } = useRoles();
   //const userInfo = localStorage.getItem("userInfo");
   //const roleId = JSON.parse(userInfo).roleId;
@@ -87,13 +99,13 @@ function MenuComponent(props) {
     if (roleToObj === "guide") return "Guia";
   }
 
-  const onLogout=()=> {
+  const onLogout = () => {
     localStorage.removeItem("userInfo");
     localStorage.removeItem("role");
     localStorage.removeItem("isAuth");
-    navigate('/');
+    navigate("/");
     //window.location.reload();
-  }
+  };
 
   return (
     <div {...stylex.props(styles.base())}>
@@ -101,13 +113,23 @@ function MenuComponent(props) {
         <label>{getRoleName()}</label>
       </div>
       <div {...stylex.props(styles.buttonsField())}>
-        <button {...stylex.props(styles.buttonStyle())}>Personal</button>
-        <button {...stylex.props(styles.buttonStyle())}>Bitacora</button>
+        <button
+          onClick={() => showComponent(<PersonalComponent />)}
+          {...stylex.props(styles.buttonStyle())}
+        >
+          Personal
+        </button>
+        <button
+          onClick={() => showComponent(<LogComponent />)}
+          {...stylex.props(styles.buttonStyle())}
+        >
+          Bitacora
+        </button>
       </div>
       <div {...stylex.props(styles.logoutField())}>
         <button
           {...stylex.props(styles.logoutButtonStyle())}
-          onClick={()=>onLogout()}
+          onClick={() => onLogout()}
         >
           Cerrar Sesión
         </button>

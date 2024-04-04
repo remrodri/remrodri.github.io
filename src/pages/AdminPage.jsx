@@ -1,7 +1,7 @@
 import backgroundImage from "../assets/images/pexels-quark-studio-2507010.jpg";
 import * as stylex from "@stylexjs/stylex";
 import MenuComponent from "../components/MenuComponent";
-import PersonalComponent from "../components/PersonalComponent";
+import { useState } from "react";
 
 
 const styles = stylex.create({
@@ -29,13 +29,21 @@ const styles = stylex.create({
 });
 
 function AdminPage() {
+  const [currentComponent, setCurrentComponent] = useState(null);
+  const showComponent = (component) => {
+    if (currentComponent) {
+      setCurrentComponent(null);
+    }
+    setCurrentComponent(component);
+  }
   return (
     <div {...stylex.props(styles.base())}>
         <div {...stylex.props(styles.menuContainer())}>
-          <MenuComponent/>
+        <MenuComponent showComponent={ showComponent } />
         </div>
         <div {...stylex.props(styles.componentContainer())}>
-          <PersonalComponent/>
+        {/* <PersonalComponent/> */}
+        {currentComponent}
         </div>
       
     </div>
