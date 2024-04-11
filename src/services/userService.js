@@ -4,18 +4,20 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 async function login(values) {
   const body = { userName: values.userName, password: values.password };
-  const result = await axios.post(apiUrl+'/users/login', body);
+  const result = await axios.post(apiUrl + "/users/login", body);
   //console.log('result::: ', result.data);
   return result.data;
 }
 
-async function createUser(body) { 
+async function createUserRequest(body) {
   try {
-    const response = await axios.post(apiUrl + '/users', body);
-    if (response.status === 201) {
-      return 'Usuario creado correctamente';
+    const response = await axios.post(apiUrl + "/users", body);
+    console.log("response::: ", response);
+    if (response) {
+      // return 'Usuario creado correctamente';
+      return response.data;
     } else {
-      throw new Error('Error al crear el usuario');
+      throw new Error("Error al crear el usuario");
     }
   } catch (error) {
     console.log("ERROR EN LA CREACION DE USUARIO");
@@ -24,7 +26,7 @@ async function createUser(body) {
   }
 }
 
-async function getAllUsers() { 
+async function getAllUsers() {
   try {
     const response = await axios.get(apiUrl + "/users");
     return response.data;
@@ -34,7 +36,7 @@ async function getAllUsers() {
   }
 }
 
-async function getUserbyId(id) { 
+async function getUserbyId(id) {
   try {
     const response = await axios.get(apiUrl + `/users/${id}`);
     return response.data;
@@ -46,14 +48,14 @@ async function getUserbyId(id) {
 
 async function updateUser(id, data) {
   try {
-    const response = await axios.patch(apiUrl+`/users/${id}`, data);
+    const response = await axios.patch(apiUrl + `/users/${id}`, data);
     if (response.status == 204) {
-        return "Se actualizó el usuario exitosamente";
+      return "Se actualizó el usuario exitosamente";
     } else {
-        throw new Error("No se pudo actualizar el usuario");
+      throw new Error("No se pudo actualizar el usuario");
     }
   } catch (err) {
-    console.log("Error en la actualización del usuario")
+    console.log("Error en la actualización del usuario");
     throw err;
   }
 }
@@ -62,9 +64,9 @@ async function removeUser(id) {
   try {
     const response = await axios.delete(apiUrl + `/users/${id}`);
     if (response.status === 204) {
-      return "Usuario eliminado correctamente"
+      return "Usuario eliminado correctamente";
     } else {
-      throw new Error('No se pudo eliminar el usuario');
+      throw new Error("No se pudo eliminar el usuario");
     }
   } catch (error) {
     console.log(`Error al intentar borrar el usuario con id ${id}`);
@@ -74,10 +76,9 @@ async function removeUser(id) {
 
 export {
   login,
-  createUser,
+  createUserRequest,
   getAllUsers,
   getUserbyId,
   updateUser,
-  removeUser
-}
-
+  removeUser,
+};

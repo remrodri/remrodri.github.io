@@ -21,8 +21,42 @@ export const RoleContextProvider = ({ children }) => {
     //console.log('response::: ', response);
     setRoles(response);
   }
+
+  const rolesToSpanish = roles.map(role => {
+    return {
+      ...role,
+      roleName: translateToSpanish(role.roleName)
+    }
+  });
+  function translateToSpanish(roleName) { 
+    switch (roleName) {
+      case 'tourGuide':
+        return 'Guia';
+      case 'salesOperator':
+        return 'Operador de ventas';
+      default:
+        return roleName;
+    }
+  }
+
+  function getRoleByID(idRole) {
+    const roleName = rolesToSpanish.find(role => { return role._id === idRole }).roleName
+      // if (roleName==='salesOperator') {
+      //   return 'Operador de ventas'
+      // }
+      // if (roleName === 'guide') {
+      //   return 'Guia'
+    // }
+    return roleName;
+    }
+  
   return (
-    <RoleContext.Provider value={{ roles, loadRoles }}>
+    <RoleContext.Provider value={{
+      roles,
+      loadRoles,
+      getRoleByID,
+      rolesToSpanish
+    }}>
       {children}
     </RoleContext.Provider>
   )

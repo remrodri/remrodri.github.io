@@ -1,7 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import { myFontSizes, mywhiteColors } from "../../assets/styles/styles.stylex";
-import { useState } from "react";
-import RegisterUserComponent from "./RegisterUserComponent";
+// import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+
 
 const styles = stylex.create({
   base: () => ({
@@ -16,7 +17,7 @@ const styles = stylex.create({
       default: "rgba(27, 29, 36, 0.38)",
     },
     boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-    backdropFilter: "blur(20px)",
+    backdropFilter: "blur(13px)",
     border: "1px solid rgba(0, 0, 0, 0.3)",
     borderTopRightRadius: "16px",
     borderBottomRightRadius: "16px",
@@ -75,14 +76,27 @@ const styles = stylex.create({
   }),
 });
 function PersonalComponent() {
-  const [currentComponent,setCurrentComponent]=useState(null)
+  // const [currentComponent, setCurrentComponent] = useState(null);
+  // const [showCards, setShowCards] = useState(true);
+  const navigate = useNavigate();
+  // const { roles, loadRoles } = useRoles();
+  // useEffect(() => {
+  //   // if (!roles) {
+  //   //   loadRoles().catch((error) => console.log("Error loading roles"));
+  //   // }
+  //   loadRoles()
+  // });
+  
+  // function filteredRoles() {
+  //   return roles && roles.filter((role) => role.roleName !== "admin");
+  // }
 
-    const showComponent = (component) => {
-      if (currentComponent) {
-        setCurrentComponent(null);
-      }
-      setCurrentComponent(component);
-    };
+  // const showComponent = (component) => {
+  //   if (currentComponent) {
+  //     setCurrentComponent(null);
+  //   }
+  //   setCurrentComponent(component);
+  // };
   return (
     <div {...stylex.props(styles.base())}>
       <div {...stylex.props(styles.buttonsContainer())}>
@@ -91,14 +105,18 @@ function PersonalComponent() {
         </div>
         <div {...stylex.props(styles.buttonsField())}>
           <button
-            onClick={()=>showComponent(<RegisterUserComponent/>)}
-            {...stylex.props(styles.buttonRegisterStyle())}>
+            // onClick={() => showComponent(<RegisterUserForm/>)}
+            onClick={() => navigate("nuevo")}
+            {...stylex.props(styles.buttonRegisterStyle())}
+          >
             Registrar
           </button>
         </div>
       </div>
       <div {...stylex.props(styles.workSpaceContainer())}>
-        {currentComponent}
+        {/* {currentComponent} */}
+        {/* {showCards ? <CardsContainer /> : <Outlet />} */}
+        {<Outlet/>}
       </div>
     </div>
   );

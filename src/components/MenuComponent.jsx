@@ -6,8 +6,7 @@ import {
   mywhiteColors,
 } from "../assets/styles/styles.stylex";
 import { useNavigate } from "react-router-dom";
-import PersonalComponent from "./Personal/PersonalComponent";
-import LogComponent from "./LogComponent";
+
 
 const styles = stylex.create({
   base: () => ({
@@ -75,10 +74,9 @@ const styles = stylex.create({
     borderBottomLeftRadius: "0.6rem",
   }),
 });
-function MenuComponent(props) {
+function MenuComponent() {
   const navigate = useNavigate();
   // eslint-disable-next-line react/prop-types
-  const { showComponent } = props;
   //const { roles, loadRoles } = useRoles();
   //const userInfo = localStorage.getItem("userInfo");
   //const roleId = JSON.parse(userInfo).roleId;
@@ -114,13 +112,15 @@ function MenuComponent(props) {
       </div>
       <div {...stylex.props(styles.buttonsField())}>
         <button
-          onClick={() => showComponent(<PersonalComponent />)}
+          // onClick={() => showComponent(<PersonalComponent />)}
+        onClick={()=>navigate('personal')}
           {...stylex.props(styles.buttonStyle())}
         >
           Personal
         </button>
         <button
-          onClick={() => showComponent(<LogComponent />)}
+          // onClick={() => showComponent(<LogComponent />)}
+        onClick={()=>navigate('bitacora')}
           {...stylex.props(styles.buttonStyle())}
         >
           Bitacora

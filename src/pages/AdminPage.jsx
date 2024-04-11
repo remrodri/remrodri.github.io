@@ -2,6 +2,7 @@ import backgroundImage from "../assets/images/pexels-quark-studio-2507010.jpg";
 import * as stylex from "@stylexjs/stylex";
 import MenuComponent from "../components/MenuComponent";
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 
 
 const styles = stylex.create({
@@ -43,7 +44,8 @@ function AdminPage() {
         </div>
         <div {...stylex.props(styles.componentContainer())}>
         {/* <PersonalComponent/> */}
-        {currentComponent}
+        {/* {currentComponent} */}
+        <Outlet/>
         </div>
       
     </div>

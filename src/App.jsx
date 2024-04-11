@@ -7,6 +7,11 @@ import AdminPage from "./pages/AdminPage";
 import LoginPage from "./pages/LoginPage";
 import { useEffect, useState } from "react";
 import { RoleContextProvider } from "./context/RoleProvider";
+import RegisterUserForm from "./components/Personal/RegisterUserForm";
+import PersonalComponent from "./components/Personal/PersonalComponent";
+import LogComponent from "./components/LogComponent";
+import { UserContextProvider } from "./context/user/UserProvider";
+import CardsContainer from "./components/Personal/CardsContainer";
 
 function App() {
   // eslint-disable-next-line no-unused-vars
@@ -17,7 +22,6 @@ function App() {
     if (userInfo) {
       setIsAuth(true);
     }
-
   }, []);
 
   const router = createBrowserRouter([
@@ -25,19 +29,45 @@ function App() {
       path: "/",
       element: (
         <RoleContextProvider>
-          <LoginPage setIsAuth={ setIsAuth} />
+          <LoginPage setIsAuth={setIsAuth} />
         </RoleContextProvider>
       ),
     },
     {
       path: "administrador",
       element: JSON.parse(localStorage.getItem("isAuth")) ? (
-        <RoleContextProvider>
-          <AdminPage />
-        </RoleContextProvider>
+        <UserContextProvider>
+          <RoleContextProvider>
+            <AdminPage />
+          </RoleContextProvider>
+        </UserContextProvider>
       ) : (
         <Navigate to="/" />
       ),
+      children: [
+        {
+          path: "personal",
+          element: (
+            <UserContextProvider>
+              <PersonalComponent />
+            </UserContextProvider>
+          ),
+          children: [
+            {
+              path: "",
+              element:<CardsContainer/>
+          },
+            {
+              path: "nuevo",
+              element: <RegisterUserForm />,
+            },
+          ],
+        },
+        {
+          path: "bitacora",
+          element: <LogComponent />,
+        },
+      ],
     },
     {
       path: "operador",
