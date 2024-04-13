@@ -62,16 +62,16 @@ function CardsContainer() {
   function handleSelectChange() {
     const roles = document.getElementById("selectOption");
     const selectedRole = roles.options[roles.selectedIndex].value;
-    console.log("selectedRole::: ", selectedRole);
+    // console.log("selectedRole::: ", selectedRole);
 
     usersFilter(selectedRole);
   }
   //se recibe un rol para filtrar  la lista de usuarios
   function usersFilter(selectedRole) {
     if (selectedRole === "all") {
-      console.log("users::: ", users);
+      // console.log("users::: ", users);
       setUsersFiltered(users);
-      console.log("usersFiltered::: ", usersFiltered);
+      // console.log("usersFiltered::: ", usersFiltered);
     } else {
       setUsersFiltered(users.filter((user) => user.roleId === selectedRole));
     }

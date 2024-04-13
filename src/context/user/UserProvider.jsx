@@ -24,7 +24,7 @@ export const UserContextProvider = ({ children }) => {
     try {
       const response = await getAllUsers();
       setUsers(response);
-      console.log("users::: ", users);
+      // console.log("users::: ", users);
     } catch (error) {
       console.log(error);      
     }
