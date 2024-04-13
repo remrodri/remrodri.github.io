@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { createUserRequest, getAllUsers } from "../../services/userService";
 
@@ -14,11 +14,21 @@ export const useUsers = () => {
 // eslint-disable-next-line react/prop-types
 export const UserContextProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
+  
 
+  useEffect(() => {
+    loadUsers()
+  },[])
   // cargar usuarios
   async function loadUsers() {
-    const response = await getAllUsers();
-    setUsers(response);
+    try {
+      const response = await getAllUsers();
+      setUsers(response);
+      console.log("users::: ", users);
+    } catch (error) {
+      console.log(error);      
+    }
+    
   }
   // const createUser = async (user) => {
   //   console.log('user::: ', user);
@@ -45,7 +55,7 @@ export const UserContextProvider = ({ children }) => {
     <UserContext.Provider
       value={{
         users,
-        loadUsers,
+        //loadUsers,
         createUser,
       }}
     >
