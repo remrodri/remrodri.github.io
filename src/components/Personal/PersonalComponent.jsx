@@ -2,6 +2,8 @@ import * as stylex from "@stylexjs/stylex";
 import { myFontSizes, mywhiteColors } from "../../assets/styles/styles.stylex";
 // import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useRoles } from "../../context/RoleProvider";
 
 
 const styles = stylex.create({
@@ -29,8 +31,9 @@ const styles = stylex.create({
     padding: "1rem",
   }),
   buttonsContainer: () => ({
-    height: "10%",
-    marginBottom: "1%",
+    // height: "10%",
+    height: "7rem",
+    marginBottom: "1rem",
     background: {
       //default: "rgba(27, 26, 57, 0.2)",
       //default: "rgba(255, 255, 255, 0.12)",
@@ -44,7 +47,7 @@ const styles = stylex.create({
     // display: "flex",
     // flexDirection: "column",
     // justifyContent: "center",
-    padding: "0 1rem",
+    // padding: "0 1rem",
   }),
   labelButtonsField: () => ({
     color: mywhiteColors.antiflesh,
@@ -52,11 +55,13 @@ const styles = stylex.create({
     height: "35%",
     display: "flex",
     alignItems: "center",
+    paddingLeft: "1rem",
   }),
   buttonsField: () => ({
     height: "65%",
     display: "flex",
     alignItems: "center",
+    paddingLeft: "1rem",
   }),
   buttonRegisterStyle: () => ({
     color: mywhiteColors.antiflesh,
@@ -72,13 +77,22 @@ const styles = stylex.create({
     borderRadius: "0.6rem",
   }),
   workSpaceContainer: () => ({
-    height: "88.3%",
+    // height: "88.3%",
+    // display: "flex",
+    // flexDirection: "column",
+    height: "calc(100% - 8rem)",
   }),
 });
 function PersonalComponent() {
+  const { loadRoles } = useRoles();
   // const [currentComponent, setCurrentComponent] = useState(null);
   // const [showCards, setShowCards] = useState(true);
   const navigate = useNavigate();
+  useEffect(() => {
+    //loadUsers()
+    loadRoles()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   // const { roles, loadRoles } = useRoles();
   // useEffect(() => {
   //   // if (!roles) {

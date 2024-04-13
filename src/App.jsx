@@ -48,9 +48,7 @@ function App() {
         {
           path: "personal",
           element: (
-            <UserContextProvider>
               <PersonalComponent />
-            </UserContextProvider>
           ),
           children: [
             {
