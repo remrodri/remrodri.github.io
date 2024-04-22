@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { RoleContext } from "./RoleContext"
 import { getRoles } from "../services/roleService";
 
@@ -15,6 +15,10 @@ export const useRoles = () => {
 export const RoleContextProvider = ({ children }) => { 
   const [roles, setRoles] = useState([]);
   
+  useEffect(() => {
+    // loadRoles();
+  },[])
+
   //cargar roles
   async function loadRoles() {
     const response = await getRoles();

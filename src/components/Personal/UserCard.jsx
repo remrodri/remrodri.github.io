@@ -2,7 +2,11 @@
 import * as stylex from "@stylexjs/stylex";
 import { myFontSizes, mywhiteColors } from "../../assets/styles/styles.stylex";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+import DeleteCard from "./DeleteCard";
 
+Modal.setAppElement("#root");
 
 const styles = stylex.create({
   base: () => ({
@@ -36,14 +40,37 @@ const styles = stylex.create({
   userInfoField: () => ({
     height: "10rem",
   }),
+  modalContainer: () => ({
+    height: "40dvh",
+    width: "40dvh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }),
 });
 
+const modalStyles = {
+  content: {
+    height: "40rem",
+    width: "40rem",
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    transform: 'translateY(-50%) translateX(-50%)',
+  },
+};
 
 function UserCard(props) {
-  const { user, handleSelectedUser } = props;
+  const navigate = useNavigate();
+  const { user, handleSelectedUser, deleteUser } = props;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   // const [showUserInfo, setShowInfo] = useState(false);
 
+  const handleModal = () => {
+    setModalIsOpen(!modalIsOpen);
+  };
   //modifica es estado para ver o no el menu
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -54,7 +81,13 @@ function UserCard(props) {
     console.log("option::: ", option);
     if (option === "viewUser") {
       // toggleUserInfo();
-      handleSelectedUser(user.ci);
+      handleSelectedUser(user._id);
+    }
+    if (option === "EditUser") {
+      navigate("editar/" + user._id);
+    }
+    if (option === "removeUser") {
+      deleteUser(user._id);
     }
     toggleMenu();
   };
@@ -64,7 +97,7 @@ function UserCard(props) {
   // };
 
   return (
-    <div  {...stylex.props(styles.base())}>
+    <div {...stylex.props(styles.base())}>
       <div {...stylex.props(styles.generalInfoField())}>
         <label htmlFor="username">Nombre:</label>
         <p>{user.firstName}</p>
@@ -80,15 +113,23 @@ function UserCard(props) {
           <button onClick={() => handleMenuItemClick("EditUser")}>
             Editar Informacion
           </button>
-          <button onClick={() => handleMenuItemClick("removeUser")}>
+          {/* <button onClick={() => handleMenuItemClick("removeUser")}>
             Eliminar Usuario
-          </button>
+          </button> */}
+          <button onClick={() => handleModal()}>Eliminar Usuario</button>
         </div>
       )}
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={handleModal}
+        contentLabel="card de eliminacion"
+        style={modalStyles}
+      >
+        <DeleteCard handleModal={handleModal} userId={user._id} />
+      </Modal>
       {/* {showUserInfo && (
         <UserInformation/>
       )} */}
-
     </div>
   );
 }

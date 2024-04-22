@@ -2,25 +2,11 @@ import axios from "axios";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-async function login(values) {
-  try {
-    const body = { email: values.email, password: values.password };
-    console.log('body::: ', body);
-    const result = await axios.post(`${apiUrl}/api/v1/login`, body);
-    console.log("result::: ", result);
-
-    if (result && result.data && result.data.token) { 
-      return  result.data.token;
-    } else {
-      throw new Error('Nose recibio token en la respuesta');
-    }
-  } catch (error) {
-    if (error.response && error.response.data && error.response.data.message) { 
-      throw new Error(error.response.data.message);
-    } else {
-      throw new Error('Error en la solicitud de inicio de sesion');
-    }
-  }
+async function login(values, setIsAuth) {
+  const body = { email: values.email, password: values.password };
+  const result = await axios.post(apiUrl + "api/v1/login", body);
+  console.log('result::: ', result.data);
+  return result.data;
 }
 
 async function createUserRequest(body) {
@@ -28,7 +14,7 @@ async function createUserRequest(body) {
     const response = await axios.post(apiUrl + "/users", body);
     console.log("response::: ", response);
     if (response.status === 200) {
-      return "Usuario creado correctamente";
+      return 'Usuario creado correctamente';
       // return response.data;
     } else {
       throw new Error("Error al crear el usuario");
