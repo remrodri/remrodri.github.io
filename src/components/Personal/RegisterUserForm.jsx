@@ -5,11 +5,11 @@ import {
   mywhiteColors,
 } from "../../assets/styles/styles.stylex";
 import { useEffect, useState } from "react";
-import { useRoles } from "../../context/RoleProvider";
 import { useUsers } from "../../context/user/UserProvider";
 import Modal from "react-modal";
 import UserPreview from "./UserPreview";
 import UserForm from "./UserForm";
+import { useNavigate, useParams } from "react-router-dom";
 
 const styles = stylex.create({
   base: () => ({
@@ -146,8 +146,9 @@ const styles = stylex.create({
 Modal.setAppElement("#root");
 
 function RegisterUserForm() {
-  const { createUser } = useUsers();
-  const { loadRoles} = useRoles();
+  const navigate = useNavigate();
+  const params = useParams();
+  const { createUser, getUserByID,updateUser } = useUsers();
   const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
@@ -159,17 +160,32 @@ function RegisterUserForm() {
   const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
-    loadRoles();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    loadUser();
+    //loadRoles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
+  const loadUser = async () => {
+    if (params.id) {
+      const user = await getUserByID(params.id);
+      setFormValues({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        roleId: user.roleId,
+        phone: user.phone,
+        ci: user.ci,
+        email: user.email,
+        status:user.status,
+      });
+    }
+  };
   const handleRegisterData = async () => {
     try {
       const response = await createUser(formValues);
       if (response) {
         alert("Usuario creado correctamente");
         // action.resetForm();
+        navigate("/administrador/personal");
       } else {
         throw new Error(response.message);
       }
@@ -177,6 +193,20 @@ function RegisterUserForm() {
       alert(`Error al registrar el usuario: ${err}`);
     }
   };
+  const handleUpdateData = async () => {
+    try {
+      const response = await updateUser(params.id, formValues);
+      if (response) {
+        alert('usuario actualizado correctamente');
+      } else {
+        throw new Error(response.message || 'Error en el servidor');
+      }
+      navigate('/administrador/personal')
+    } catch (error) {
+      alert(`Error al actualizar el usuario: ${error}`);
+    }
+  }
+
   function handleShowPreview() {
     setShowPreview(!showPreview);
   }
@@ -185,7 +215,7 @@ function RegisterUserForm() {
     <div {...stylex.props(styles.base())}>
       <div {...stylex.props(styles.baseLabelField())}>
         <label {...stylex.props(styles.baseLabelStyle())}>
-          Registro de nuevo usuario
+          {params.id ? "Edicion de usuario" : "Registro de nuevo usuario"}
         </label>
       </div>
       <div {...stylex.props(styles.progressBarField())}>
@@ -193,7 +223,22 @@ function RegisterUserForm() {
         <div {...stylex.props(styles.progressBarStep2())}>Paso 2</div>
         <div {...stylex.props(styles.progressBarStep3())}>Paso 3</div>
       </div>
-      {!showPreview ? <UserForm formValues={formValues} setformValues={setFormValues} handleShowPreview={ handleShowPreview} /> : <UserPreview formValues={formValues} handleShowPreview={handleShowPreview} handleRegisterData={handleRegisterData}/>}
+      {!showPreview ? (
+        <UserForm
+          formValues={formValues}
+          setformValues={setFormValues}
+          handleShowPreview={handleShowPreview}
+          params={params}
+        />
+      ) : (
+        <UserPreview
+          formValues={formValues}
+          handleShowPreview={handleShowPreview}
+          handleRegisterData={handleRegisterData}
+          handleUpdateData={handleUpdateData}
+          params={params}
+        />
+      )}
     </div>
   );
 }

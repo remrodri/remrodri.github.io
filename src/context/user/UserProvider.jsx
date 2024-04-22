@@ -1,6 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
-import { createUserRequest, getAllUsers } from "../../services/userService";
+import {
+  createUserRequest,
+  getAllUsers,
+  getUserByIDRequest,
+  removeUserRequest,
+  updateUserRequest,
+} from "../../services/userService";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useUsers = () => {
@@ -14,11 +20,10 @@ export const useUsers = () => {
 // eslint-disable-next-line react/prop-types
 export const UserContextProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
-  
 
   useEffect(() => {
-    loadUsers()
-  },[])
+    loadUsers();
+  }, []);
   // cargar usuarios
   async function loadUsers() {
     try {
@@ -26,9 +31,8 @@ export const UserContextProvider = ({ children }) => {
       setUsers(response);
       // console.log("users::: ", users);
     } catch (error) {
-      console.log(error);      
+      console.log(error);
     }
-    
   }
   // const createUser = async (user) => {
   //   console.log('user::: ', user);
@@ -43,13 +47,47 @@ export const UserContextProvider = ({ children }) => {
     // console.log("user::: ", user);
     try {
       const response = await createUserRequest(user);
-      // console.log('response::: ', response);
-      setUsers([...users, response]);
+      if (response === "Usuario creado correctamente") { 
+        setUsers([...users, user]);
+        return response;
+      }
+        // console.log('response::: ', response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function getUserByID(id) {
+    try {
+      const response = await getUserByIDRequest(id);
       return response;
     } catch (error) {
       console.log(error);
     }
   }
+
+  const updateUser = async (id, newData) => {
+    // console.log('newData::: ', newData);
+    // console.log('id::: ', id);
+    try {
+      const response = await updateUserRequest(id, newData);
+
+      // console.log('response::: ', response);
+      setUsers(users.map((user) => (user.id === id ? newData : user)));
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteUser = async (id) => {
+    try {
+      const response = await removeUserRequest(id);
+      setUsers(users.filter((user) => user._id !== id));
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <UserContext.Provider
@@ -57,6 +95,9 @@ export const UserContextProvider = ({ children }) => {
         users,
         //loadUsers,
         createUser,
+        getUserByID,
+        updateUser,
+        deleteUser,
       }}
     >
       {children}
