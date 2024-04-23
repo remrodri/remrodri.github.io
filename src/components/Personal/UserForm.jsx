@@ -12,21 +12,16 @@ const styles = stylex.create({
   }),
 });
 
-// eslint-disable-next-line react/prop-types
 function UserForm({ formValues, setformValues, handleShowPreview }) {
-  const { rolesToSpanish } = useRoles();
+  const { roles } = useRoles();
   const params = useParams();
 
   function filteredRoles() {
-    // console.log(rolesToSpanish);
     return (
-      rolesToSpanish &&
-      // eslint-disable-next-line react/prop-types
-      rolesToSpanish.filter((role) => role.roleName !== "admin")
+      roles &&
+      roles.filter((role) => role.roleName !== "administrador")
     );
   }
-  // console.log(formValues);
-  //console.log(params);
 
   return (
     <Formik

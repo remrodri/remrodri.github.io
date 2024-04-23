@@ -2,6 +2,9 @@ import axios from "axios";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
+
+
+
 async function login(values) {
   try {
     const body = { email: values.email, password: values.password };
@@ -25,7 +28,7 @@ async function login(values) {
 
 async function createUserRequest(body) {
   try {
-    const response = await axios.post(apiUrl + "/users", body);
+    const response = await axios.post(`${apiUrl}/api/v1/users`, body);
     console.log("response::: ", response);
     if (response.status === 200) {
       return "Usuario creado correctamente";
@@ -42,7 +45,13 @@ async function createUserRequest(body) {
 
 async function getAllUsers() {
   try {
-    const response = await axios.get(apiUrl + "/users");
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      console.error("no se encontro un token en el localStorage");
+    }
+    const response = await axios.get(`${apiUrl}/api/v1/users`);
     return response.data;
   } catch (error) {
     console.log("Ocurrió un error al obtener los usuarios");
