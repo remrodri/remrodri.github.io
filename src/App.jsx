@@ -12,13 +12,16 @@ import CardsContainer from "./components/Personal/CardsContainer";
 import { UserContextProvider } from "./context/user/UserProvider";
 import PersonalComponent from "./components/Personal/PersonalComponent";
 import RegisterUserForm from "./components/Personal/RegisterUserForm";
-import LogComponent from "./components/LogComponent";
+import LogComponent from "./components/Log/LogComponent";
+import { LogContextProvider } from "./context/log/LogProvider";
+
 
 const App = () => {
   const token = localStorage.getItem("token");
   if (token) {
+    // eslint-disable-next-line no-unused-vars
     const decodedToken = jwtDecode(token);
-    console.log("decodedToken::: ", decodedToken);
+    // console.log("decodedToken::: ", decodedToken);
   }
   useEffect(() => {
     token;
@@ -50,20 +53,27 @@ const router = createBrowserRouter([
         element: <PersonalComponent />,
         children: [
           {
-            path: '',
-            element:<CardsContainer/>
+            path: "",
+            element: <CardsContainer />,
           },
           {
-            path: 'nuevo',
-            element:<RegisterUserForm/>
+            path: "nuevo",
+            element: <RegisterUserForm />,
           },
           {
-            path: 'editar/:id',
-            element:<RegisterUserForm/>
-          }
-        ]
+            path: "editar/:id",
+            element: <RegisterUserForm />,
+          },
+        ],
       },
-      {path:'bitacora',element:<LogComponent/>}
+      {
+        path: "bitacora",
+        element: (
+            <LogContextProvider>
+              <LogComponent />
+            </LogContextProvider>
+        ),
+      },
     ],
   },
 ]);

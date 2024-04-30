@@ -75,12 +75,13 @@ const styles = stylex.create({
 });
 function MenuComponent() {
   // const { roles } = props;
-  const { decodeTokenRoleName } = useAuth();
+  const { decodeTokenRoleName,logout } = useAuth();
 
   const navigate = useNavigate();
 
   const onLogout = () => {
 
+    logout();
     localStorage.removeItem("token");
     navigate("/");
   };

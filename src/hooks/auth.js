@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "../services/userService";
+import { login,logoutRequest } from "../services/userService";
 import { jwtDecode } from "jwt-decode";
 
 
@@ -28,6 +28,7 @@ const useAuth = () => {
       const token = localStorage.getItem('token');
       if (token) {
         const decodedToken = jwtDecode(token);
+        // console.log('decodedToken::: ', decodedToken);
         return decodedToken.roleName
       }
     } catch (error) {
@@ -35,9 +36,23 @@ const useAuth = () => {
     }
   }
 
+
+
   const logout = () => {
-    setIsAuth(false);
-    localStorage.removeItem("token");
+    try {
+
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        // console.log('decodedToken::: ', decodedToken.userId);
+        logoutRequest(decodedToken.userId);
+      }
+      setIsAuth(false);
+      localStorage.removeItem("token");
+
+    } catch (error) {
+      console.error('No hay token para decodificar', error);
+    }
   };
   return { isAuth, handleLogin, logout, decodeTokenRoleName };
 };

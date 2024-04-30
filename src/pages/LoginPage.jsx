@@ -25,7 +25,7 @@ function LoginPage() {
     try {
       await handleLogin(values);
       const roleName = decodeTokenRoleName() || "";
-      console.log('roleName::: ', roleName);
+      // console.log('roleName::: ', roleName);
       if (roleName==='administrador') {
         navigate('/administrador')
       }

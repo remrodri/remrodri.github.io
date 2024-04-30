@@ -79,14 +79,14 @@ function CardsContainer() {
     }
   }
   
-  function translateRole(role) { 
-      if (role.roleName === 'admin')
-        return 'Administrador'
-      if (role.roleName === 'tourGuide')
-        return 'Guia'
-      if (role.roleName === 'salesOperator')
-        return 'Operador'
-  }
+  // function translateRole(role) { 
+  //     if (role.roleName === 'admin')
+  //       return 'Administrador'
+  //     if (role.roleName === 'tourGuide')
+  //       return 'Guia'
+  //     if (role.roleName === 'salesOperator')
+  //       return 'Operador'
+  // }
 
   function sendUsers() {
     return usersFiltered.map((user) => (
@@ -124,10 +124,10 @@ function CardsContainer() {
           {...stylex.props(styles.selectFilterStyle())}
         >
           <option value="all">Todos</option>
-          {roles &&
+          {
             roles.map((role) => (
               <option key={role._id} value={role._id}>
-                {translateRole(role)}
+                {role.roleName}
               </option>
             ))}
         </select>
