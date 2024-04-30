@@ -92,8 +92,19 @@ function UserPreview({
   handleUpdateData,
 }) {
   // console.log("roles::: ", roles);
-  const { getRoleByID } = useRoles();
+  const { roles } = useRoles();
   // console.log(getRoleByID("66018c264cbbc339db1bd87b"));
+
+
+
+  const roleName = (idRole) => {
+    const role = roles.find((role) => {
+      if (role._id === idRole) { 
+        return role
+      }
+    })
+    return role.roleName;
+  }
 
   return (
     <div {...stylex.props(styles.base())}>
@@ -102,28 +113,25 @@ function UserPreview({
           <label htmlFor="">Revisa la información del usuario</label>
         </div>
         <div {...stylex.props(styles.userInformationField())}>
-          <p >Nombre(s):</p>
-          <p >{formValues.firstName}</p>
-          <p >Apellido(s):</p>
-          <p >{formValues.lastName}</p>
-          <p >Rol:</p>
-          <p >
-            {getRoleByID(formValues.roleId)}
-          </p>
-          <p >Telefono:</p>
-          <p >{formValues.phone}</p>
-          <p >Correo electronico: </p>
-          <p >{formValues.email}</p>
-          <p >Carnet de identidad:</p>
-          <p >{formValues.ci}</p>
-            {params.id && (
-              <>
-                <p >Estado</p>
-                <p >
-                  {formValues.status?'Activo': 'Inactivo'}
-                </p>
-              </>
-            )}
+          <p>Nombre(s):</p>
+          <p>{formValues.firstName}</p>
+          <p>Apellido(s):</p>
+          <p>{formValues.lastName}</p>
+          <p>Rol:</p>
+          {/* <p>{getRoleName(formValues.roleId)}</p> */}
+          <p>{roleName(formValues.roleId) }</p>
+          <p>Telefono:</p>
+          <p>{formValues.phone}</p>
+          <p>Correo electronico: </p>
+          <p>{formValues.email}</p>
+          <p>Carnet de identidad:</p>
+          <p>{formValues.ci}</p>
+          {params.id && (
+            <>
+              <p>Estado</p>
+              <p>{formValues.status ? "Activo" : "Inactivo"}</p>
+            </>
+          )}
         </div>
         <div {...stylex.props(styles.buttonsField())}>
           <button

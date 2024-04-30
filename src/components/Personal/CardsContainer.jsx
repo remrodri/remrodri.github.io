@@ -47,7 +47,7 @@ const styles = stylex.create({
 //componente de renderizado de Cards de usuarios
 function CardsContainer() {
   const { users,deleteUser } = useUsers();
-  const { rolesToSpanish } = useRoles();
+  const { roles } = useRoles();
   const [usersFiltered, setUsersFiltered] = useState([]);
   const [selectedUser,setSelectedUser]=useState(null)
   
@@ -78,6 +78,16 @@ function CardsContainer() {
       setUsersFiltered(users.filter((user) => user.roleId === selectedRole));
     }
   }
+  
+  // function translateRole(role) { 
+  //     if (role.roleName === 'admin')
+  //       return 'Administrador'
+  //     if (role.roleName === 'tourGuide')
+  //       return 'Guia'
+  //     if (role.roleName === 'salesOperator')
+  //       return 'Operador'
+  // }
+
   function sendUsers() {
     return usersFiltered.map((user) => (
       <div key={user._id}>
@@ -97,7 +107,9 @@ function CardsContainer() {
       </div>
     ));
   }
-// console.log("selectedUser::: ", selectedUser);
+  // console.log(translateRoles())
+  // console.log("selectedUser::: ", selectedUser);
+  // console.log('rolesToSpanish::: ', rolesToSpanish);
   return (
     <div {...stylex.props(styles.base())}>
       <div {...stylex.props(styles.filterField())}>
@@ -112,8 +124,8 @@ function CardsContainer() {
           {...stylex.props(styles.selectFilterStyle())}
         >
           <option value="all">Todos</option>
-          {rolesToSpanish &&
-            rolesToSpanish.map((role) => (
+          {
+            roles.map((role) => (
               <option key={role._id} value={role._id}>
                 {role.roleName}
               </option>

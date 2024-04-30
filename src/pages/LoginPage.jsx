@@ -1,9 +1,14 @@
 import * as Yup from "yup";
 import useAuth from "../hooks/auth";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+// import { jwtDecode } from "jwt-decode";
+// import { useRoles } from "../context/RoleProvider";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
-  const { handleLogin } = useAuth();
+  const navigate = useNavigate();
+  const { handleLogin, decodeTokenRoleName } = useAuth();
+  // const { roles } = useRoles();
   const initialValues = {
     email: "",
     password: "",
@@ -19,12 +24,34 @@ function LoginPage() {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       await handleLogin(values);
+      const roleName = decodeTokenRoleName() || "";
+      // console.log('roleName::: ', roleName);
+      if (roleName==='administrador') {
+        navigate('/administrador')
+      }
+      // const token = localStorage.getItem("token");
+      // if (token) {
+      //   const decodedToken = jwtDecode(token);
+      //   console.log('decodedToken::: ', decodedToken);
+      //   // const roleId = decodedToken.roleId;
+      //   // console.log('decodedToken::: ', decodedToken.roleId);
+
+      //   // const userRole = roles.find((role) => {
+      //   //   return role._id===roleId
+      //   // })
+
+      //   // console.log('userRole::: ', userRole.roleName);
+      //   if (decodedToken.roleName === 'admin') {
+      //     navigate('/administrador');
+      //   }
+      // }
     } catch (error) {
       console.error("Error en el inicio de sesion", error.message);
     } finally {
       setSubmitting(false);
     }
   };
+
   return (
     <div>
       <Formik
@@ -42,14 +69,15 @@ function LoginPage() {
             <div>
               <label htmlFor="password">Contraseña</label>
               <Field type="password" name="password" />
-              <ErrorMessage name='passeord' component={'div'}/>
+              <ErrorMessage name="passeord" component={"div"} />
             </div>
             <button type="submit" disabled={isSubmitting}>
-              {isSubmitting?'Iniciando sesion': 'Iniciar Sesión'}
+              {isSubmitting ? "Iniciando sesion" : "Iniciar Sesión"}
             </button>
           </Form>
         )}
       </Formik>
+      ;
     </div>
   );
 }
