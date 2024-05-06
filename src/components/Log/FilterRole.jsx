@@ -1,7 +1,10 @@
 import * as stylex from "@stylexjs/stylex";
 
 const styles = stylex.create({
-  base: () => ({}),
+  base: () => ({
+    display: "flex",
+    flexDirection: "column"
+  }),
 });
 // eslint-disable-next-line react/prop-types
 function FilterRole({ roles, setRoleSelected }) {

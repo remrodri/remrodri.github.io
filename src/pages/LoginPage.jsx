@@ -4,7 +4,17 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 // import { jwtDecode } from "jwt-decode";
 // import { useRoles } from "../context/RoleProvider";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Swal from "sweetalert2";
+import * as stylex from "@stylexjs/stylex";
+import { createPortal } from "react-dom";
+import PasswordComponent from "../components/password/PasswordComponent";
 
+const styles = stylex.create({
+  passwordLabelStyle: () => ({
+    cursor: "pointer",
+  }),
+});
 function LoginPage() {
   const navigate = useNavigate();
   const { handleLogin, decodeTokenRoleName } = useAuth();
@@ -12,6 +22,13 @@ function LoginPage() {
   const initialValues = {
     email: "",
     password: "",
+  };
+  const [swalShown, setSwalShown] = useState(false);
+  const showSwal = () => {
+    Swal.fire({
+      didOpen: () => setSwalShown(true),
+      didClose: () => setSwalShown(false),
+    });
   };
 
   const validationSchema = Yup.object().shape({
@@ -26,8 +43,8 @@ function LoginPage() {
       await handleLogin(values);
       const roleName = decodeTokenRoleName() || "";
       // console.log('roleName::: ', roleName);
-      if (roleName==='administrador') {
-        navigate('/administrador')
+      if (roleName === "administrador") {
+        navigate("/administrador");
       }
       // const token = localStorage.getItem("token");
       // if (token) {
@@ -77,7 +94,15 @@ function LoginPage() {
           </Form>
         )}
       </Formik>
-      ;
+      <label
+        htmlFor=""
+        onClick={showSwal}
+        {...stylex.props(styles.passwordLabelStyle())}
+      >
+        Recuperar contraseña
+      </label>
+      {swalShown &&
+        createPortal(<PasswordComponent />, Swal.getHtmlContainer())}
     </div>
   );
 }
