@@ -1,5 +1,8 @@
-// eslint-disable-next-line react/prop-types
+/* eslint-disable react/prop-types */
+
 function UserInformation({ user, handleSelectedUser }) {
+  // console.log('user::: ', user);
+
   return (
     <div>
       TODA LA INFORMACION DEL USUARIO

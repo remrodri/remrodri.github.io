@@ -3,19 +3,57 @@ import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 async function login(values) {
-  const body = { userName: values.userName, password: values.password };
-  const result = await axios.post(apiUrl + "/users/login", body);
-  //console.log('result::: ', result.data);
-  return result.data;
+  try {
+    const body = { email: values.email, password: values.password };
+    console.log("body::: ", body);
+    const result = await axios.post(`${apiUrl}/api/v1/login`, body);
+    // console.log("result::: ", result);
+
+    if (result && result.data && result.data.token) {
+      return result.data.token;
+    } else {
+      throw new Error("Nose recibio token en la respuesta");
+    }
+  } catch (error) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    } else {
+      throw new Error("Error en la solicitud de inicio de sesion");
+    }
+  }
+}
+
+async function logoutRequest(userId) {
+  try {
+    const body = {userId}
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+    // eslint-disable-next-line no-unused-vars
+    const response = await axios.post(`${apiUrl}/api/v1/logout`,body);
+    // console.log('response::: ', response);
+    
+  } catch (error) {
+    console.error("No se encontro un token en el almacenamiento local");
+    throw error;
+  }
 }
 
 async function createUserRequest(body) {
+  // console.log("body::: ", body);
   try {
-    const response = await axios.post(apiUrl + "/users", body);
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      console.error("No se encontro un token en el almacenamiento local");
+    }
+    const response = await axios.post(`${apiUrl}/api/v1/register`, body);
     console.log("response::: ", response);
-    if (response) {
-      // return 'Usuario creado correctamente';
-      return response.data;
+    if (response.status === 201) {
+      return "Usuario creado correctamente";
+      // return response.data;
     } else {
       throw new Error("Error al crear el usuario");
     }
@@ -28,7 +66,13 @@ async function createUserRequest(body) {
 
 async function getAllUsers() {
   try {
-    const response = await axios.get(apiUrl + "/users");
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      console.error("no se encontro un token en el localStorage");
+    }
+    const response = await axios.get(`${apiUrl}/api/v1/users`);
     return response.data;
   } catch (error) {
     console.log("Ocurrió un error al obtener los usuarios");
@@ -36,9 +80,16 @@ async function getAllUsers() {
   }
 }
 
-async function getUserbyId(id) {
+async function getUserByIdRequest(id) {
+  // console.log('id::: ', id);
   try {
-    const response = await axios.get(apiUrl + `/users/${id}`);
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      console.error("No se encontro un token en el almacenamiento local");
+    }
+    const response = await axios.get(`${apiUrl}/api/v1/user/${id}`);
     return response.data;
   } catch (error) {
     console.log(`Ocurrio un error al buscar el usuario con id ${id}`);
@@ -46,11 +97,12 @@ async function getUserbyId(id) {
   }
 }
 
-async function updateUser(id, data) {
+async function updateUserRequest(id, data) {
   try {
-    const response = await axios.patch(apiUrl + `/users/${id}`, data);
-    if (response.status == 204) {
-      return "Se actualizó el usuario exitosamente";
+    const response = await axios.patch(apiUrl + `/user/${id}`, data);
+    if (response.status == 200) {
+      // return "Se actualizó el usuario exitosamente";
+      return response;
     } else {
       throw new Error("No se pudo actualizar el usuario");
     }
@@ -60,10 +112,16 @@ async function updateUser(id, data) {
   }
 }
 
-async function removeUser(id) {
+async function removeUserRequest(id) {
   try {
-    const response = await axios.delete(apiUrl + `/users/${id}`);
-    if (response.status === 204) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      console.error("No se encontro un token en el almacenamiento local");
+    }
+    const response = await axios.delete(`${apiUrl}/api/v1/user/${id}`);
+    if (response.status === 200) {
       return "Usuario eliminado correctamente";
     } else {
       throw new Error("No se pudo eliminar el usuario");
@@ -76,9 +134,10 @@ async function removeUser(id) {
 
 export {
   login,
+  logoutRequest,
   createUserRequest,
   getAllUsers,
-  getUserbyId,
-  updateUser,
-  removeUser,
+  getUserByIdRequest,
+  updateUserRequest,
+  removeUserRequest,
 };

@@ -3,7 +3,7 @@ import * as stylex from "@stylexjs/stylex";
 import MenuComponent from "../components/MenuComponent";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-
+// import { useRoles } from "../context/RoleProvider";
 
 const styles = stylex.create({
   base: () => ({
@@ -16,38 +16,43 @@ const styles = stylex.create({
     alignItems: "center",
     justifyContent: "center",
     padding: "0.6%",
-    gap:'0.6%',
+    gap: "0.6%",
   }),
-  
+
   menuContainer: () => ({
-    height: '100%',
+    height: "100%",
     //width:'12%',
   }),
   componentContainer: () => ({
-    height: '100%',
-    width: '100%',
-  })
+    height: "100%",
+    width: "100%",
+  }),
 });
 
 function AdminPage() {
   const [currentComponent, setCurrentComponent] = useState(null);
+  // const {roles } = useRoles();
   const showComponent = (component) => {
     if (currentComponent) {
       setCurrentComponent(null);
     }
     setCurrentComponent(component);
-  }
+  };
   return (
     <div {...stylex.props(styles.base())}>
-        <div {...stylex.props(styles.menuContainer())}>
-        <MenuComponent showComponent={ showComponent } />
-        </div>
-        <div {...stylex.props(styles.componentContainer())}>
+      <div {...stylex.props(styles.menuContainer())}>
+        <MenuComponent
+          showComponent={showComponent}
+          // getRoleById={getRoleById}
+          // rolesToSpanish={rolesToSpanish}
+          // roles={roles}
+        />
+      </div>
+      <div {...stylex.props(styles.componentContainer())}>
         {/* <PersonalComponent/> */}
         {/* {currentComponent} */}
-        <Outlet/>
-        </div>
-      
+        <Outlet />
+      </div>
     </div>
   );
 }

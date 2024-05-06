@@ -3,78 +3,79 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import AdminPage from "./pages/AdminPage";
 import LoginPage from "./pages/LoginPage";
-import { useEffect, useState } from "react";
+import AdminPage from "./pages/AdminPage";
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 import { RoleContextProvider } from "./context/RoleProvider";
-import RegisterUserForm from "./components/Personal/RegisterUserForm";
-import PersonalComponent from "./components/Personal/PersonalComponent";
-import LogComponent from "./components/LogComponent";
-import { UserContextProvider } from "./context/user/UserProvider";
 import CardsContainer from "./components/Personal/CardsContainer";
+import { UserContextProvider } from "./context/user/UserProvider";
+import PersonalComponent from "./components/Personal/PersonalComponent";
+import RegisterUserForm from "./components/Personal/RegisterUserForm";
+import LogComponent from "./components/Log/LogComponent";
+import { LogContextProvider } from "./context/log/LogProvider";
 
-function App() {
-  // eslint-disable-next-line no-unused-vars
-  const [isAuth, setIsAuth] = useState(false);
 
+const App = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    // eslint-disable-next-line no-unused-vars
+    const decodedToken = jwtDecode(token);
+    // console.log("decodedToken::: ", decodedToken);
+  }
   useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
-    if (userInfo) {
-      setIsAuth(true);
-    }
-  }, []);
+    token;
+  }, [token]);
 
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: (
-        <RoleContextProvider>
-          <LoginPage setIsAuth={setIsAuth} />
-        </RoleContextProvider>
-      ),
-    },
-    {
-      path: "administrador",
-      element: JSON.parse(localStorage.getItem("isAuth")) ? (
-        <UserContextProvider>
-          <RoleContextProvider>
-            <AdminPage />
-          </RoleContextProvider>
-        </UserContextProvider>
-      ) : (
-        <Navigate to="/" />
-      ),
-      children: [
-        {
-          path: "personal",
-          element: (
-              <PersonalComponent />
-          ),
-          children: [
-            {
-              path: "",
-              element:<CardsContainer/>
+  return (
+    <UserContextProvider>
+      <RoleContextProvider>
+        <RouterProvider router={router} />
+      </RoleContextProvider>
+    </UserContextProvider>
+  );
+};
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navigate to="/login" />,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/administrador",
+    element: <AdminPage />,
+    children: [
+      {
+        path: "personal",
+        element: <PersonalComponent />,
+        children: [
+          {
+            path: "",
+            element: <CardsContainer />,
           },
-            {
-              path: "nuevo",
-              element: <RegisterUserForm />,
-            },
-          ],
-        },
-        {
-          path: "bitacora",
-          element: <LogComponent />,
-        },
-      ],
-    },
-    {
-      path: "operador",
-    },
-    {
-      path: "guia",
-    },
-  ]);
-  return <RouterProvider router={router} />;
-}
+          {
+            path: "nuevo",
+            element: <RegisterUserForm />,
+          },
+          {
+            path: "editar/:id",
+            element: <RegisterUserForm />,
+          },
+        ],
+      },
+      {
+        path: "bitacora",
+        element: (
+            <LogContextProvider>
+              <LogComponent />
+            </LogContextProvider>
+        ),
+      },
+    ],
+  },
+]);
 
 export default App;

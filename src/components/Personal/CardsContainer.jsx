@@ -15,7 +15,7 @@ const styles = stylex.create({
     },
     borderBottomRightRadius: "10px",
     boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-    backdropFilter: "blur(5px)",
+    // backdropFilter: "blur(5px)",
     border: "1px solid rgba(255, 255, 255, 0.3)",
     display: "flex",
     flexDirection: "column",
@@ -40,15 +40,17 @@ const styles = stylex.create({
     flexDirection: "column",
     flexGrow: 1,
     // height:'100%'
+    overflowY:'auto',
   }),
 });
 
 //componente de renderizado de Cards de usuarios
 function CardsContainer() {
-  const { users } = useUsers();
-  const { rolesToSpanish } = useRoles();
+  const { users,deleteUser } = useUsers();
+  const { roles } = useRoles();
   const [usersFiltered, setUsersFiltered] = useState([]);
   const [selectedUser,setSelectedUser]=useState(null)
+  
 
   const handleSelectedUser = (userId) => { 
     setSelectedUser(userId)
@@ -62,29 +64,52 @@ function CardsContainer() {
   function handleSelectChange() {
     const roles = document.getElementById("selectOption");
     const selectedRole = roles.options[roles.selectedIndex].value;
-    console.log("selectedRole::: ", selectedRole);
+    // console.log("selectedRole::: ", selectedRole);
 
     usersFilter(selectedRole);
   }
   //se recibe un rol para filtrar  la lista de usuarios
   function usersFilter(selectedRole) {
     if (selectedRole === "all") {
-      console.log("users::: ", users);
+      // console.log("users::: ", users);
       setUsersFiltered(users);
-      console.log("usersFiltered::: ", usersFiltered);
+      // console.log("usersFiltered::: ", usersFiltered);
     } else {
       setUsersFiltered(users.filter((user) => user.roleId === selectedRole));
     }
   }
+  
+  // function translateRole(role) { 
+  //     if (role.roleName === 'admin')
+  //       return 'Administrador'
+  //     if (role.roleName === 'tourGuide')
+  //       return 'Guia'
+  //     if (role.roleName === 'salesOperator')
+  //       return 'Operador'
+  // }
+
   function sendUsers() {
     return usersFiltered.map((user) => (
-      <div key={user.ci}>
-        <UserCard user={user} handleSelectedUser={ handleSelectedUser} />
-        {selectedUser === user.ci && <UserInformation user={user} handleSelectedUser={ handleSelectedUser} />}
+      <div key={user._id}>
+        <UserCard
+          // key={user._id}
+          user={user}
+          handleSelectedUser={handleSelectedUser}
+          deleteUser={deleteUser}
+        />
+        {selectedUser === user._id && (
+          <UserInformation
+            // key={user._id}
+            user={user}
+            handleSelectedUser={handleSelectedUser}
+          />
+        )}
       </div>
     ));
   }
-
+  // console.log(translateRoles())
+  // console.log("selectedUser::: ", selectedUser);
+  // console.log('rolesToSpanish::: ', rolesToSpanish);
   return (
     <div {...stylex.props(styles.base())}>
       <div {...stylex.props(styles.filterField())}>
@@ -99,8 +124,8 @@ function CardsContainer() {
           {...stylex.props(styles.selectFilterStyle())}
         >
           <option value="all">Todos</option>
-          {rolesToSpanish &&
-            rolesToSpanish.map((role) => (
+          {
+            roles.map((role) => (
               <option key={role._id} value={role._id}>
                 {role.roleName}
               </option>

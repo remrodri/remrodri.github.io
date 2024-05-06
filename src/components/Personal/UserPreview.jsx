@@ -1,6 +1,10 @@
 /* eslint-disable react/prop-types */
 import * as stylex from "@stylexjs/stylex";
-import { myBlackColors, myFontSizes, mywhiteColors } from "../../assets/styles/styles.stylex";
+import {
+  myBlackColors,
+  myFontSizes,
+  mywhiteColors,
+} from "../../assets/styles/styles.stylex";
 import { useRoles } from "../../context/RoleProvider";
 
 const styles = stylex.create({
@@ -12,8 +16,9 @@ const styles = stylex.create({
     alignItems: "center",
     justifyContent: "center",
   }),
+
   userInformationContainer: () => ({
-    width: "35%",
+    width: "35rem",
     height: "90%",
     background: {
       default: "rgba(27, 29, 36, 0.38)",
@@ -27,15 +32,20 @@ const styles = stylex.create({
     alignItems: "center",
   }),
   labelInformationfield: () => ({
-    fontSize: myFontSizes.myFontSize4,
-    height: "10%",
-    alignContent: "center",
+    fontSize: myFontSizes.myFontSize5,
+    height: "5rem",
+    width:'100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent:'center',
+    
   }),
   userInformationField: () => ({
     height: "75%",
-    fontSize: myFontSizes.myFontSize5,
+    fontSize: myFontSizes.myFontSize6,
     width: "80%",
-    alignContent:'center',
+    alignContent: "center",
+    overflowY: "auto",
   }),
   titleStyles: () => ({
     background: myBlackColors.blackColor2,
@@ -74,10 +84,27 @@ const styles = stylex.create({
     },
   }),
 });
-function UserPreview({ formValues, handleShowPreview, handleRegisterData }) {
+function UserPreview({
+  formValues,
+  handleShowPreview,
+  handleRegisterData,
+  params,
+  handleUpdateData,
+}) {
   // console.log("roles::: ", roles);
-  const { getRoleByID } = useRoles();
+  const { roles } = useRoles();
   // console.log(getRoleByID("66018c264cbbc339db1bd87b"));
+
+
+
+  const roleName = (idRole) => {
+    const role = roles.find((role) => {
+      if (role._id === idRole) { 
+        return role
+      }
+    })
+    return role.roleName;
+  }
 
   return (
     <div {...stylex.props(styles.base())}>
@@ -86,20 +113,25 @@ function UserPreview({ formValues, handleShowPreview, handleRegisterData }) {
           <label htmlFor="">Revisa la información del usuario</label>
         </div>
         <div {...stylex.props(styles.userInformationField())}>
-          <p {...stylex.props(styles.titleStyles())}>Nombre(s):</p>
-          <p {...stylex.props(styles.infoStyles())}>{formValues.firstName}</p>
-          <p {...stylex.props(styles.titleStyles())}>Apellido(s):</p>
-          <p {...stylex.props(styles.infoStyles())}>{formValues.lastName}</p>
-          <p {...stylex.props(styles.titleStyles())}>Rol:</p>
-          <p {...stylex.props(styles.infoStyles())}>
-            {getRoleByID(formValues.roleId)}
-          </p>
-          <p {...stylex.props(styles.titleStyles())}>Telefono:</p>
-          <p {...stylex.props(styles.infoStyles())}>{formValues.phone}</p>
-          <p {...stylex.props(styles.titleStyles())}>Correo electronico: </p>
-          <p {...stylex.props(styles.infoStyles())}>{formValues.email}</p>
-          <p {...stylex.props(styles.titleStyles())}>Carnet de identidad:</p>
-          <p {...stylex.props(styles.infoStyles())}>{formValues.ci}</p>
+          <p>Nombre(s):</p>
+          <p>{formValues.firstName}</p>
+          <p>Apellido(s):</p>
+          <p>{formValues.lastName}</p>
+          <p>Rol:</p>
+          {/* <p>{getRoleName(formValues.roleId)}</p> */}
+          <p>{roleName(formValues.roleId) }</p>
+          <p>Telefono:</p>
+          <p>{formValues.phone}</p>
+          <p>Correo electronico: </p>
+          <p>{formValues.email}</p>
+          <p>Carnet de identidad:</p>
+          <p>{formValues.ci}</p>
+          {params.id && (
+            <>
+              <p>Estado</p>
+              <p>{formValues.status ? "Activo" : "Inactivo"}</p>
+            </>
+          )}
         </div>
         <div {...stylex.props(styles.buttonsField())}>
           <button
@@ -110,13 +142,15 @@ function UserPreview({ formValues, handleShowPreview, handleRegisterData }) {
           </button>
           <button
             type="submit"
-            onClick={() => handleRegisterData()}
+            onClick={() =>
+              params.id ? handleUpdateData() : handleRegisterData()
+            }
             {...stylex.props(
               styles.buttonsStyle(),
               styles.registerButtonStyle()
             )}
           >
-            Registrar
+            {params.id ? "Actualizar" : "Registrar"}
           </button>
         </div>
       </div>

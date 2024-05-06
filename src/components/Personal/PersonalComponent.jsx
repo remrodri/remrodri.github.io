@@ -4,6 +4,7 @@ import { myFontSizes, mywhiteColors } from "../../assets/styles/styles.stylex";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useRoles } from "../../context/RoleProvider";
+import { useUsers } from "../../context/user/UserProvider";
 
 
 const styles = stylex.create({
@@ -85,11 +86,12 @@ const styles = stylex.create({
 });
 function PersonalComponent() {
   const { loadRoles } = useRoles();
+  const { loadUsers } = useUsers();
   // const [currentComponent, setCurrentComponent] = useState(null);
   // const [showCards, setShowCards] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
-    //loadUsers()
+    loadUsers()
     loadRoles()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

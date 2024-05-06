@@ -1,12 +1,11 @@
 import * as stylex from "@stylexjs/stylex";
-import { useEffect } from "react";
 import {
   myBlackColors,
   myFontSizes,
   mywhiteColors,
 } from "../assets/styles/styles.stylex";
 import { useNavigate } from "react-router-dom";
-
+import useAuth from "../hooks/auth";
 
 const styles = stylex.create({
   base: () => ({
@@ -75,52 +74,34 @@ const styles = stylex.create({
   }),
 });
 function MenuComponent() {
-  const navigate = useNavigate();
-  // eslint-disable-next-line react/prop-types
-  //const { roles, loadRoles } = useRoles();
-  //const userInfo = localStorage.getItem("userInfo");
-  //const roleId = JSON.parse(userInfo).roleId;
-  //console.log("roleId::: ", roleId);
-  useEffect(() => {
-    //loadRoles();
-  }, []);
+  // const { roles } = props;
+  const { decodeTokenRoleName,logout } = useAuth();
 
-  function getRoleName() {
-    // localStorage.setItem('role', JSON.stringify(roles.find((role) => role._id === roleId).roleName));
-    // console.log('roles::: ', roles);
-    //const roleObj = roles.find((role) => role._id === roleId);
-    const roleInfo = localStorage.getItem("role");
-    const roleToObj = JSON.parse(roleInfo);
-    //console.log("roleToObj::: ", roleToObj);
-    if (roleToObj === "admin") return "Administrador";
-    if (roleToObj === "operator") return "Operador";
-    if (roleToObj === "guide") return "Guia";
-  }
+  const navigate = useNavigate();
 
   const onLogout = () => {
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("role");
-    localStorage.removeItem("isAuth");
+
+    logout();
+    localStorage.removeItem("token");
     navigate("/");
-    //window.location.reload();
   };
 
   return (
     <div {...stylex.props(styles.base())}>
       <div {...stylex.props(styles.logoField())}>
-        <label>{getRoleName()}</label>
+        <label>{decodeTokenRoleName()}</label>
       </div>
       <div {...stylex.props(styles.buttonsField())}>
         <button
           // onClick={() => showComponent(<PersonalComponent />)}
-        onClick={()=>navigate('personal')}
+          onClick={() => navigate("personal")}
           {...stylex.props(styles.buttonStyle())}
         >
           Personal
         </button>
         <button
           // onClick={() => showComponent(<LogComponent />)}
-        onClick={()=>navigate('bitacora')}
+          onClick={() => navigate("bitacora")}
           {...stylex.props(styles.buttonStyle())}
         >
           Bitacora
